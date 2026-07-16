@@ -370,11 +370,6 @@ a { color: inherit; text-decoration: none; }
 }
 .business-head { position: sticky; top: calc(var(--header-h) + 40px); }
 .business-head .title-display { margin-bottom: 24px; }
-.business-intro {
-  color: var(--stone);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-}
 
 .business-list { display: grid; }
 .biz {
