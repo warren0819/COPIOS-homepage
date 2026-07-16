@@ -409,12 +409,6 @@ a { color: inherit; text-decoration: none; }
   padding-bottom: 56px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.footer-mark {
-  width: 64px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--line-dark);
-  margin-bottom: 24px;
-}
 .footer-name {
   font-size: 1.25rem;
   font-weight: 800;
