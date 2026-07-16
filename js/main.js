@@ -47,7 +47,13 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
 // ===== Footer year =====
-document.getElementById('year').textContent = new Date().getFullYear();
+// 설립연도(2026)는 고정, 이후 해에는 "2026-현재연도" 범위로 자동 표기
+(function () {
+  var FOUNDED = 2026;
+  var now = new Date().getFullYear();
+  document.getElementById('year').textContent =
+    now > FOUNDED ? FOUNDED + '-' + now : String(FOUNDED);
+})();
 
 // ===== Hidden presentation gate: click COPIOS wordmark 5 times =====
 // 발표자료는 AES-256-GCM으로 암호화되어 assets/deck.enc.json에 저장된다.
