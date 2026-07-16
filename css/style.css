@@ -51,7 +51,11 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-h);
   -webkit-text-size-adjust: 100%;
+  /* 스크롤바 숨김 — 발표자료와 동일 (휠·터치·키보드 스크롤은 그대로 동작) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+html::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 body {
   font-family: var(--sans);
