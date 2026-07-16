@@ -238,6 +238,92 @@
     </div>
   </footer>
 
+  <!-- ===== Hidden: presentation gate (COPIOS wordmark x5) ===== -->
+  <div class="pw-modal" id="pwModal" hidden>
+    <div class="pw-box">
+      <p class="pw-title">발표자료</p>
+      <p class="pw-desc">비밀번호를 입력해 주세요.</p>
+      <form id="pwForm">
+        <input type="password" id="pwInput" autocomplete="off" placeholder="Password" aria-label="비밀번호" />
+        <p class="pw-error" id="pwError" hidden>비밀번호가 일치하지 않습니다.</p>
+        <div class="pw-actions">
+          <button type="button" class="pw-cancel" id="pwCancel">취소</button>
+          <button type="submit" class="btn btn-gold">확인</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="deck" id="deck" hidden>
+    <header class="deck-bar">
+      <span class="deck-brand">COPIOS</span>
+      <span class="deck-count" id="deckCount">1 / 6</span>
+      <button class="deck-close" id="deckClose" aria-label="발표자료 닫기">&#10005;</button>
+    </header>
+    <div class="deck-stage">
+      <section class="slide slide-cover">
+        <img src="assets/logo.png" alt="" class="slide-logo" />
+        <p class="slide-eyebrow">COPIOS 투자법인</p>
+        <h2 class="slide-hero">Defining<br />the Future of Value</h2>
+        <p class="slide-sub">Digital Family Office &amp; Private Investment</p>
+      </section>
+      <section class="slide">
+        <p class="slide-eyebrow">01 · Overview</p>
+        <h2>회사 개요</h2>
+        <p class="slide-body">
+          COPIOS(코피오스) 주식회사는 회사의 고유 자산을 운용하여<br />
+          미래를 설계하는 <strong>프라이빗 투자 오피스</strong>입니다.
+        </p>
+        <p class="slide-body">
+          깊이 있는 경제 리포트를 통해 올바른 투자 방향성과 마인드를 제시하며,<br />
+          자본과 지식이 선순환하는 구조를 지향합니다.
+        </p>
+      </section>
+      <section class="slide">
+        <p class="slide-eyebrow">02 · Philosophy</p>
+        <h2>투자 철학</h2>
+        <ul class="slide-list">
+          <li><strong>퀀트 모델링 기반 글로벌 투자</strong><span>데이터와 알고리즘으로 시장을 해석합니다.</span></li>
+          <li><strong>부동산 밸류업 전략</strong><span>공간의 내재 가치를 발굴하여 자산 성장을 설계합니다.</span></li>
+          <li><strong>예술적 가치를 통한 아트테크</strong><span>예술과 투자의 균형으로 포트폴리오를 다각화합니다.</span></li>
+        </ul>
+      </section>
+      <section class="slide">
+        <p class="slide-eyebrow">03 · Business</p>
+        <h2>사업 영역</h2>
+        <ul class="slide-list slide-list-compact">
+          <li><strong>Global Financial Investment</strong><span>글로벌 금융 투자</span></li>
+          <li><strong>Art &amp; Alternative Investment</strong><span>아트테크 및 대체 투자</span></li>
+          <li><strong>Economic Insight &amp; Report</strong><span>경제 리포트 및 인사이트</span></li>
+          <li><strong>Real Estate Portfolio</strong><span>부동산 투자 및 관리</span></li>
+          <li><strong>Wealth Structure &amp; System Consulting</strong><span>자산 구조 및 시스템 컨설팅</span></li>
+        </ul>
+      </section>
+      <section class="slide">
+        <p class="slide-eyebrow">04 · Identity</p>
+        <h2>풍요의 뿔, 영원한 번영의 상징</h2>
+        <p class="slide-body">
+          코피오스의 심볼은 풍요의 여신이 소유한<br />
+          '풍요의 뿔(Cornucopia)'에서 영감을 받았습니다.
+        </p>
+        <p class="slide-body">
+          생명의 근원인 물과 곡식 그리고 무한한 가치를 창출하는 뿔의 형상은<br />
+          COPIOS가 지향하는 <strong>영원한 번영</strong>을 상징합니다.
+        </p>
+      </section>
+      <section class="slide slide-cover">
+        <p class="slide-quote">
+          "진정한 풍요는<br />시간의 소유에서 시작됩니다."
+        </p>
+        <p class="slide-sign"><strong>warren</strong><span>CEO, COPIOS</span></p>
+      </section>
+    </div>
+    <footer class="deck-nav">
+      <button id="deckPrev" aria-label="이전 슬라이드">&#8592;</button>
+      <button id="deckNext" aria-label="다음 슬라이드">&#8594;</button>
+    </footer>
+  </div>
+
   <script src="js/main.js"></script>
 </body>
 </html>
