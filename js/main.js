@@ -37,7 +37,8 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // ===== Hidden presentation gate: click COPIOS wordmark 5 times =====
-const PW_HASH = '4afcbc9fb197fa48a4ac99e56504fac269110b336e899595467f1fa5e9293ed7';
+// 발표자료는 AES-256-GCM으로 암호화되어 assets/deck.enc.json에 저장된다.
+// 입력한 비밀번호가 곧 복호화 키다 — 복호화 성공 여부가 인증을 겸한다.
 const CLICKS_REQUIRED = 5;
 const CLICK_WINDOW_MS = 4000;
 
@@ -48,15 +49,11 @@ const pwInput = document.getElementById('pwInput');
 const pwError = document.getElementById('pwError');
 const pwCancel = document.getElementById('pwCancel');
 const deck = document.getElementById('deck');
-const deckCount = document.getElementById('deckCount');
+const deckFrame = document.getElementById('deckFrame');
 const deckClose = document.getElementById('deckClose');
-const deckPrev = document.getElementById('deckPrev');
-const deckNext = document.getElementById('deckNext');
-const slides = [...deck.querySelectorAll('.slide')];
 
 let clickCount = 0;
 let clickTimer = null;
-let currentSlide = 0;
 
 brand.addEventListener('click', () => {
   clickCount += 1;
@@ -84,51 +81,64 @@ pwModal.addEventListener('click', (e) => {
   if (e.target === pwModal) closePwModal();
 });
 
-async function sha256Hex(text) {
-  const data = new TextEncoder().encode(text);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+const b64ToBytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+
+async function loadPayload() {
+  if (window.DECK_ENC) return window.DECK_ENC;
+  const res = await fetch('assets/deck.enc.json');
+  if (!res.ok) throw new Error('payload fetch failed');
+  return res.json();
+}
+
+async function decryptDeck(password) {
+  const p = await loadPayload();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']
+  );
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: b64ToBytes(p.salt), iterations: p.iter, hash: 'SHA-256' },
+    keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+  );
+  const plain = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: b64ToBytes(p.iv) }, key, b64ToBytes(p.data)
+  );
+  return new TextDecoder().decode(plain);
 }
 
 pwForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const hash = await sha256Hex(pwInput.value);
-  if (hash === PW_HASH) {
+  const submitBtn = pwForm.querySelector('button[type=submit]');
+  submitBtn.disabled = true;
+  try {
+    const html = await decryptDeck(pwInput.value);
     closePwModal();
-    openDeck();
-  } else {
+    openDeck(html);
+  } catch {
     pwError.hidden = false;
     pwInput.select();
+  } finally {
+    submitBtn.disabled = false;
   }
 });
 
-function showSlide(index) {
-  currentSlide = Math.max(0, Math.min(slides.length - 1, index));
-  slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
-  deckCount.textContent = `${currentSlide + 1} / ${slides.length}`;
-  deckPrev.disabled = currentSlide === 0;
-  deckNext.disabled = currentSlide === slides.length - 1;
-}
-
-function openDeck() {
+function openDeck(html) {
+  const blob = new Blob([html], { type: 'text/html' });
+  deckFrame.src = URL.createObjectURL(blob);
   deck.hidden = false;
   document.body.style.overflow = 'hidden';
-  showSlide(0);
+  deckFrame.addEventListener('load', () => deckFrame.contentWindow?.focus(), { once: true });
 }
 
 function closeDeck() {
   deck.hidden = true;
   document.body.style.overflow = '';
+  URL.revokeObjectURL(deckFrame.src);
+  deckFrame.src = 'about:blank';
 }
 
 deckClose.addEventListener('click', closeDeck);
-deckPrev.addEventListener('click', () => showSlide(currentSlide - 1));
-deckNext.addEventListener('click', () => showSlide(currentSlide + 1));
 
 document.addEventListener('keydown', (e) => {
   if (!pwModal.hidden && e.key === 'Escape') { closePwModal(); return; }
-  if (deck.hidden) return;
-  if (e.key === 'Escape') closeDeck();
-  if (e.key === 'ArrowRight' || e.key === ' ') showSlide(currentSlide + 1);
-  if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+  if (!deck.hidden && e.key === 'Escape') closeDeck();
 });
