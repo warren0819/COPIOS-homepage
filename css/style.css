@@ -582,32 +582,27 @@ strong { font-weight: 800; }
   color: #f1f2f0;
 }
 .deck[hidden] { display: none; }
-.deck-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 28px;
-  border-bottom: 1px solid var(--line-dark);
-}
-.deck-brand {
-  font-weight: 800;
-  letter-spacing: 0.24em;
-  font-size: 1rem;
-}
-.deck-close {
-  background: none;
-  border: 0;
-  color: #c7cdd8;
-  font-size: 1.3rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 6px 8px;
-  transition: color 0.15s;
-}
-.deck-close:hover { color: var(--gold-soft); }
 .deck-frame {
   flex: 1;
   width: 100%;
   border: 0;
   background: #fff;
 }
+.deck-home {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  z-index: 10;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--line-dark);
+  background: rgba(16, 28, 48, 0.85);
+  backdrop-filter: blur(8px);
+  color: #f1f2f0;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.deck-home:hover { border-color: var(--gold-soft); color: var(--gold-soft); }
