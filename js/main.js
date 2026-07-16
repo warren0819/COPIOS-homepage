@@ -21,6 +21,19 @@ navMobile.addEventListener('click', (e) => {
   }
 });
 
+// ===== Scrollspy: highlight current section in nav =====
+const navLinks = [...document.querySelectorAll('.nav-desktop a')];
+const spyObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    navLinks.forEach((link) =>
+      link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`)
+    );
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+
+document.querySelectorAll('main section[id]').forEach((s) => spyObserver.observe(s));
+
 // ===== Reveal on scroll =====
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
