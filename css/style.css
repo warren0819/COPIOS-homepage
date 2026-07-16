@@ -227,10 +227,18 @@ a { color: inherit; text-decoration: none; }
 }
 .hero-title {
   font-weight: 900;
-  font-size: var(--fs-hero);
-  line-height: var(--lh-display);
+  font-size: clamp(2.5rem, 6vw, 4.1rem);
+  line-height: 1.25;
   letter-spacing: var(--ls-display);
   text-wrap: balance;
+}
+.hero-sub {
+  margin-top: 22px;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
 }
 .hero-rule {
   width: 64px; height: 1px;
