@@ -1,15 +1,15 @@
-/* ===== COPIOS — private wealth, pine & bronze ===== */
+/* ===== COPIOS — private wealth, midnight navy & champagne gold ===== */
 :root {
-  --pine: #16221d;
-  --pine-2: #1c2b25;
-  --paper: #f4f2ec;
-  --card: #fbfaf6;
-  --ink: #1b221e;
-  --stone: #5d645d;
-  --bronze: #a5813c;
-  --bronze-soft: #c2a35f;
-  --line: #e3dfd3;
-  --line-dark: rgba(194, 163, 95, 0.22);
+  --navy: #101c30;
+  --navy-2: #17263e;
+  --paper: #f4f3ee;
+  --card: #fbfaf7;
+  --ink: #1a2130;
+  --stone: #5c6371;
+  --gold: #b1904f;
+  --gold-soft: #cbb279;
+  --line: #e3e0d6;
+  --line-dark: rgba(203, 178, 121, 0.24);
   --header-h: 76px;
   --serif: "Noto Serif KR", "Nanum Myeongjo", Georgia, serif;
   --sans: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
@@ -40,10 +40,10 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--bronze);
+  color: var(--gold);
   margin-bottom: 16px;
 }
-.eyebrow-dark { color: var(--bronze-soft); }
+.eyebrow-dark { color: var(--gold-soft); }
 
 .title-serif {
   font-family: var(--serif);
@@ -59,7 +59,7 @@ a { color: inherit; text-decoration: none; }
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 100;
-  background: rgba(22, 34, 29, 0.82);
+  background: rgba(16, 28, 48, 0.84);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
   transition: border-color 0.25s;
@@ -74,38 +74,32 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   justify-content: space-between;
 }
-.brand { display: flex; align-items: center; gap: 13px; }
-.brand-mark {
-  width: 42px; height: 42px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--line-dark);
-}
 .brand-name {
-  color: #f2efe6;
+  font-family: var(--serif);
+  color: #f1f2f0;
   font-weight: 700;
-  font-size: 1.02rem;
-  letter-spacing: 0.04em;
+  font-size: 1.3rem;
+  letter-spacing: 0.18em;
 }
-.brand-name em { font-style: normal; font-weight: 500; color: #b9bdb2; }
 
 .nav-desktop { display: flex; align-items: center; gap: 34px; }
 .nav-desktop a {
-  color: #cfd3c8;
+  color: #c7cdd8;
   font-size: 0.88rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: color 0.15s;
 }
-.nav-desktop a:hover { color: var(--bronze-soft); }
+.nav-desktop a:hover { color: var(--gold-soft); }
 .nav-desktop .nav-cta {
-  color: var(--bronze-soft);
+  color: var(--gold-soft);
   border: 1px solid var(--line-dark);
   padding: 9px 22px;
   border-radius: 999px;
   transition: background 0.15s, color 0.15s;
 }
-.nav-desktop .nav-cta:hover { background: var(--bronze); color: #fff; border-color: var(--bronze); }
+.nav-desktop .nav-cta:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
 
 .menu-toggle {
   display: none;
@@ -118,7 +112,7 @@ a { color: inherit; text-decoration: none; }
 }
 .menu-toggle span {
   width: 26px; height: 2px;
-  background: #f2efe6;
+  background: #f1f2f0;
   transition: transform 0.25s;
 }
 .menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(4.5px) rotate(45deg); }
@@ -127,7 +121,7 @@ a { color: inherit; text-decoration: none; }
 .nav-mobile {
   display: none;
   flex-direction: column;
-  background: var(--pine);
+  background: var(--navy);
   border-bottom: 1px solid var(--line-dark);
   max-height: 0;
   overflow: hidden;
@@ -135,7 +129,7 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-mobile.open { max-height: 360px; }
 .nav-mobile a {
-  color: #e8e6dc;
+  color: #e7e9ee;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -149,10 +143,10 @@ a { color: inherit; text-decoration: none; }
 /* ===== Hero ===== */
 .hero {
   background:
-    radial-gradient(900px 480px at 78% -10%, rgba(194, 163, 95, 0.14), transparent 65%),
-    radial-gradient(700px 420px at 8% 110%, rgba(194, 163, 95, 0.07), transparent 60%),
-    linear-gradient(175deg, var(--pine) 0%, var(--pine-2) 100%);
-  color: #f2efe6;
+    radial-gradient(900px 480px at 78% -10%, rgba(203, 178, 121, 0.13), transparent 65%),
+    radial-gradient(700px 420px at 8% 110%, rgba(203, 178, 121, 0.06), transparent 60%),
+    linear-gradient(175deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: #f1f2f0;
   padding: calc(var(--header-h) + 110px) 24px 130px;
   text-align: center;
 }
@@ -161,7 +155,7 @@ a { color: inherit; text-decoration: none; }
   font-weight: 600;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--bronze-soft);
+  color: var(--gold-soft);
   margin-bottom: 30px;
 }
 .hero-title {
@@ -175,12 +169,12 @@ a { color: inherit; text-decoration: none; }
 .hero-rule {
   width: 64px; height: 1px;
   margin: 44px auto;
-  background: linear-gradient(90deg, transparent, var(--bronze-soft), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
 }
 .hero-lede {
   font-size: clamp(1.02rem, 2.2vw, 1.18rem);
   line-height: 2;
-  color: #cfd3c8;
+  color: #c7cdd8;
   margin-bottom: 48px;
 }
 .hero-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
@@ -196,13 +190,13 @@ a { color: inherit; text-decoration: none; }
   transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
 }
 .btn:active { transform: scale(0.97); }
-.btn-bronze { background: var(--bronze); color: #fff; }
-.btn-bronze:hover { background: #8f6e30; }
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-gold:hover { background: #8f6e30; }
 .btn-line {
   border: 1px solid rgba(242, 239, 230, 0.35);
-  color: #f2efe6;
+  color: #f1f2f0;
 }
-.btn-line:hover { border-color: var(--bronze-soft); color: var(--bronze-soft); }
+.btn-line:hover { border-color: var(--gold-soft); color: var(--gold-soft); }
 
 /* ===== Philosophy ===== */
 .philosophy { padding: 130px 0 120px; }
@@ -220,7 +214,7 @@ a { color: inherit; text-decoration: none; }
 }
 .pillar-mark {
   display: block;
-  color: var(--bronze);
+  color: var(--gold);
   font-size: 1.5rem;
   line-height: 1;
   margin-bottom: 24px;
@@ -299,7 +293,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.4;
 }
 .biz-kr {
-  color: var(--bronze);
+  color: var(--gold);
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -310,9 +304,9 @@ a { color: inherit; text-decoration: none; }
 /* ===== CEO Message ===== */
 .message {
   background:
-    radial-gradient(800px 420px at 50% -20%, rgba(194, 163, 95, 0.12), transparent 65%),
-    linear-gradient(180deg, var(--pine) 0%, var(--pine-2) 100%);
-  color: #f2efe6;
+    radial-gradient(800px 420px at 50% -20%, rgba(203, 178, 121, 0.11), transparent 65%),
+    linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: #f1f2f0;
   padding: 140px 0;
   text-align: center;
 }
@@ -336,13 +330,13 @@ a { color: inherit; text-decoration: none; }
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: var(--bronze-soft);
+  color: var(--gold-soft);
 }
 .message-sign span {
   font-size: 0.85rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #9aa094;
+  color: #8f97a8;
 }
 
 /* ===== Contact ===== */
@@ -360,8 +354,8 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== Footer ===== */
 .site-footer {
-  background: var(--pine);
-  color: #b9bdb2;
+  background: var(--navy);
+  color: #b3bac7;
   padding: 90px 0 56px;
 }
 .footer-top {
@@ -381,13 +375,13 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--serif);
   font-size: 1.3rem;
   font-weight: 700;
-  color: #f2efe6;
+  color: #f1f2f0;
   margin-bottom: 8px;
 }
 .footer-tag {
   font-size: 0.88rem;
   font-style: italic;
-  color: #8d938a;
+  color: #848da0;
 }
 
 .footer-info { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 40px; align-content: start; }
@@ -396,23 +390,23 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bronze-soft);
+  color: var(--gold-soft);
   margin-bottom: 2px;
 }
 .footer-info dd { font-size: 0.95rem; }
-.footer-info a:hover { color: #f2efe6; text-decoration: underline; }
+.footer-info a:hover { color: #f1f2f0; text-decoration: underline; }
 
 .footer-disclaimer {
   margin-top: 44px;
   padding: 20px 26px;
-  border: 1px solid rgba(194, 163, 95, 0.25);
+  border: 1px solid rgba(203, 178, 121, 0.28);
   font-size: 0.9rem;
-  color: #cfd3c8;
+  color: #c7cdd8;
 }
 .footer-copy {
   margin-top: 36px;
   font-size: 0.82rem;
-  color: #7d837a;
+  color: #6f7889;
 }
 
 /* ===== Reveal ===== */
