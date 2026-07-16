@@ -474,12 +474,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 2.1;
   color: #c7cdd8;
 }
-.footer-info span { white-space: nowrap; }
-.footer-info span:not(:last-child)::after {
-  content: "\00B7";
-  margin: 0 10px;
-  color: var(--gold-soft);
-}
+.footer-info span { display: block; }
 .footer-corp { font-weight: 700; color: #f1f2f0; }
 
 .footer-disclaimer {
