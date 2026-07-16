@@ -50,7 +50,6 @@ const pwError = document.getElementById('pwError');
 const pwCancel = document.getElementById('pwCancel');
 const deck = document.getElementById('deck');
 const deckFrame = document.getElementById('deckFrame');
-const deckClose = document.getElementById('deckClose');
 
 let clickCount = 0;
 let clickTimer = null;
@@ -136,7 +135,9 @@ function closeDeck() {
   deckFrame.src = 'about:blank';
 }
 
-deckClose.addEventListener('click', closeDeck);
+window.addEventListener('message', (e) => {
+  if (e.data === 'copios:home') closeDeck();
+});
 
 document.addEventListener('keydown', (e) => {
   if (!pwModal.hidden && e.key === 'Escape') { closePwModal(); return; }
