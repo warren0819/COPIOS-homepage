@@ -4,19 +4,19 @@ const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
-// ===== Menu =====
-const menu = document.getElementById('menu');
+// ===== Mobile menu =====
+const navMobile = document.getElementById('navMobile');
 const menuToggle = document.getElementById('menuToggle');
 
 menuToggle.addEventListener('click', () => {
-  const open = menu.classList.toggle('open');
+  const open = navMobile.classList.toggle('open');
   menuToggle.setAttribute('aria-expanded', String(open));
   menuToggle.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
 });
 
-menu.addEventListener('click', (e) => {
+navMobile.addEventListener('click', (e) => {
   if (e.target.matches('a')) {
-    menu.classList.remove('open');
+    navMobile.classList.remove('open');
     menuToggle.setAttribute('aria-expanded', 'false');
   }
 });
