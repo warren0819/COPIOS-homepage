@@ -469,19 +469,18 @@ a { color: inherit; text-decoration: none; }
 }
 
 .footer-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 40px;
-  align-content: start;
+  align-self: center;
+  font-size: var(--fs-small);
+  line-height: 2.1;
+  color: #c7cdd8;
 }
-.footer-info dt {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: var(--ls-kr-label);
+.footer-info span { white-space: nowrap; }
+.footer-info span:not(:last-child)::after {
+  content: "\00B7";
+  margin: 0 10px;
   color: var(--gold-soft);
-  margin-bottom: 3px;
 }
-.footer-info dd { font-size: var(--fs-small); line-height: 1.7; }
+.footer-corp { font-weight: 700; color: #f1f2f0; }
 
 .footer-disclaimer {
   margin-top: 44px;
