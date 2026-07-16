@@ -475,6 +475,16 @@ a { color: inherit; text-decoration: none; }
   color: #c7cdd8;
 }
 .footer-info span { display: block; }
+.footer-info span::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  margin-right: 10px;
+  vertical-align: 2px;
+}
 .footer-corp { font-weight: 700; color: #f1f2f0; }
 
 .footer-disclaimer {
