@@ -1,4 +1,4 @@
-# copios-homepage
+# COPIOS-HomePage
 
 **COPIOS 투자법인 공식 홈페이지**
 
