@@ -16,6 +16,28 @@ tools/encrypt_deck.py # 발표자료 암호화 스크립트
 CNAME                 # 커스텀 도메인 (copios.co.kr)
 ```
 
+## 구성도
+
+```mermaid
+flowchart TB
+    subgraph SERVE["🌐 홈페이지 서빙"]
+        U["방문자 브라우저"] -->|"copios.co.kr 주소 조회"| CF["Cloudflare DNS<br/>(A 레코드 4개 · DNS 전용)"]
+        CF -->|"185.199.108~111.153"| GP["GitHub Pages<br/>main 브랜치 = 배포본 · HTTPS 자동"]
+        GP -->|"HTML/CSS/JS 직접 서빙"| U
+    end
+
+    subgraph DECK["🔐 발표자료 자동 배포 (gold 저장소)"]
+        G["gold Dev 브랜치에서<br/>copios-발표자료.html 수정 · 커밋"] --> WF["GitHub Actions<br/>deploy-deck.yml"]
+        WF -->|"AES-256-GCM 암호화"| ENC["assets/deck.enc.json<br/>이 저장소 main에 자동 커밋"]
+    end
+
+    ENC -->|"1~2분 내 반영"| GP
+    U -->|"COPIOS 워드마크 5회 클릭<br/>+ 비밀번호 입력"| DEC["브라우저에서 복호화<br/>발표자료 전체화면 열람"]
+```
+
+- 서버·빌드 과정이 없는 순수 정적 구조 — `main` 커밋이 곧 배포
+- 발표자료 평문은 어디에도 배포되지 않고, 방문자 브라우저 안에서만 복호화됨
+
 ## 배포 구성
 
 - **호스팅**: GitHub Pages — `main` 브랜치 루트에서 자동 배포 (push 후 1~2분 내 반영)
