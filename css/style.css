@@ -475,7 +475,7 @@ a { color: inherit; text-decoration: none; }
   color: #c7cdd8;
 }
 .footer-info span { display: block; }
-.footer-info span::before {
+.footer-info span:not(.footer-corp)::before {
   content: "";
   display: inline-block;
   width: 4px;
