@@ -100,7 +100,7 @@ const b64ToBytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 
 async function loadPayload() {
   if (window.DECK_ENC) return window.DECK_ENC;
-  const res = await fetch('assets/deck.enc.json');
+  const res = await fetch('assets/data.bin');
   if (!res.ok) throw new Error('payload fetch failed');
   return res.json();
 }
