@@ -55,9 +55,6 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
     now > FOUNDED ? FOUNDED + '-' + now : String(FOUNDED);
 })();
 
-// ===== Hidden presentation gate: click COPIOS wordmark 5 times =====
-// 발표자료는 AES-256-GCM으로 암호화되어 assets/deck.enc.json에 저장된다.
-// 입력한 비밀번호가 곧 복호화 키다 — 복호화 성공 여부가 인증을 겸한다.
 const CLICKS_REQUIRED = 5;
 const CLICK_WINDOW_MS = 4000;
 
