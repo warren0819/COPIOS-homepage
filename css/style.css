@@ -51,7 +51,7 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-h);
   -webkit-text-size-adjust: 100%;
-  /* 스크롤바 숨김 — 발표자료와 동일 (휠·터치·키보드 스크롤은 그대로 동작) */
+  /* 스크롤바 숨김 (휠·터치·키보드 스크롤은 그대로 동작) */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -549,7 +549,7 @@ strong { font-weight: 800; }
   .br-narrow { display: inline; }
 }
 
-/* ===== Hidden presentation gate ===== */
+/* ===== Modal ===== */
 .pw-modal {
   position: fixed;
   inset: 0;
@@ -618,7 +618,7 @@ strong { font-weight: 800; }
 }
 .pw-cancel:hover { border-color: var(--stone); color: var(--ink); }
 
-/* ===== Presentation deck ===== */
+/* ===== Overlay frame ===== */
 .deck {
   position: fixed;
   inset: 0;
