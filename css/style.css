@@ -534,7 +534,6 @@ strong { font-weight: 800; }
   .business-grid { grid-template-columns: 1fr; gap: 34px; }
   .business-head { position: static; }
   .identity-grid { grid-template-columns: 1fr; gap: 60px; text-align: center; }
-  .identity-copy .identity-body { text-align: left; }
   .philosophy-grid { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; gap: 44px; }
 }
