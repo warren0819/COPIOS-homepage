@@ -1,10 +1,8 @@
-// ===== Header hairline on scroll =====
 const header = document.getElementById('header');
 const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
-// ===== Mobile menu =====
 const navMobile = document.getElementById('navMobile');
 const menuToggle = document.getElementById('menuToggle');
 
@@ -21,7 +19,6 @@ navMobile.addEventListener('click', (e) => {
   }
 });
 
-// ===== Scrollspy: highlight current section in nav =====
 const navLinks = [...document.querySelectorAll('.nav-desktop a')];
 const spyObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -34,7 +31,6 @@ const spyObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('main section[id]').forEach((s) => spyObserver.observe(s));
 
-// ===== Reveal on scroll =====
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -46,8 +42,6 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
-// ===== Footer year =====
-// 설립연도(2026)는 고정, 이후 해에는 "2026-현재연도" 범위로 자동 표기
 (function () {
   var FOUNDED = 2026;
   var now = new Date().getFullYear();
@@ -55,8 +49,8 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
     now > FOUNDED ? FOUNDED + '-' + now : String(FOUNDED);
 })();
 
-const CLICKS_REQUIRED = 5;
-const CLICK_WINDOW_MS = 4000;
+const T1 = 5;
+const T2 = 4000;
 
 const brand = document.querySelector('.brand');
 const libModal = document.getElementById('libModal');
@@ -70,17 +64,15 @@ const pwCancel = document.getElementById('pwCancel');
 const deck = document.getElementById('deck');
 const deckFrame = document.getElementById('deckFrame');
 
-let clickCount = 0;
-let clickTimer = null;
+let c1 = 0;
+let t1 = null;
 
-// 인증 전에는 자료가 몇 개인지도, 제목이 무엇인지도 알 수 없다.
-// 목록은 비밀번호로 복호화한 뒤에야 만들어진다.
 brand.addEventListener('click', () => {
-  clickCount += 1;
-  clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => { clickCount = 0; }, CLICK_WINDOW_MS);
-  if (clickCount >= CLICKS_REQUIRED) {
-    clickCount = 0;
+  c1 += 1;
+  clearTimeout(t1);
+  t1 = setTimeout(() => { c1 = 0; }, T2);
+  if (c1 >= T1) {
+    c1 = 0;
     if (keyCache) openLibrary(); else openPwModal();
   }
 });
@@ -143,22 +135,19 @@ let keyCache = null;
 async function loadPayload() {
   if (payloadCache) return payloadCache;
   const src = window.DECK_ENC ? Promise.resolve(window.DECK_ENC) : fetch('assets/data.bin')
-    .then((res) => { if (!res.ok) throw new Error('payload fetch failed'); return res.json(); });
+    .then((res) => { if (!res.ok) throw new Error('e'); return res.json(); });
   payloadCache = await src;
   return payloadCache;
 }
 
-// 자료 1개짜리 예전 형식과 여러 개를 담는 현재 형식을 함께 지원한다.
 function itemAt(payload, index) {
   if (Array.isArray(payload.items)) return payload.items[index];
   return index === 0 ? { iv: payload.iv, data: payload.data } : undefined;
 }
 
-// 목록도 암호화되어 있다. 없는 경우(예전 형식)에는 제목 없이 번호만 보여준다.
 async function readIndex(payload, key) {
   if (payload.index) {
-    const json = await decryptItem(payload.index, key);
-    return JSON.parse(json);
+    return JSON.parse(await decryptItem(payload.index, key));
   }
   const count = Array.isArray(payload.items) ? payload.items.length : 1;
   return Array.from({ length: count }, (_, i) => ({
@@ -197,7 +186,6 @@ pwForm.addEventListener('submit', async (e) => {
   try {
     const payload = await loadPayload();
     const key = await deriveKey(payload, pwInput.value);
-    // 목록 복호화가 곧 비밀번호 검증이다. 실패하면 목록도 열리지 않는다.
     const docs = await readIndex(payload, key);
     keyCache = key;
     renderLibrary(docs);
@@ -219,7 +207,6 @@ function openDeck(html) {
   deckFrame.addEventListener('load', () => deckFrame.contentWindow?.focus(), { once: true });
 }
 
-// 인증을 마친 뒤에는 목록으로 돌아가 다른 자료를 바로 열 수 있게 한다.
 function closeDeck() {
   deck.hidden = true;
   document.body.style.overflow = '';
