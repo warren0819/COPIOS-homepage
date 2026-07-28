@@ -58,8 +58,18 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
 const CLICKS_REQUIRED = 5;
 const CLICK_WINDOW_MS = 4000;
 
+// 목록 순서는 tools/encrypt_deck.py 에 넘기는 파일 순서와 일치해야 한다.
+const DOCS = [
+  { no: '01', name: '회사소개 자료', desc: 'COPIOS 투자법인 소개' },
+  { no: '02', name: '자녀투자계획안', desc: '20년 장기 자산 형성 전략' },
+];
+
 const brand = document.querySelector('.brand');
+const libModal = document.getElementById('libModal');
+const libList = document.getElementById('libList');
+const libCancel = document.getElementById('libCancel');
 const pwModal = document.getElementById('pwModal');
+const pwTitle = document.getElementById('pwTitle');
 const pwForm = document.getElementById('pwForm');
 const pwInput = document.getElementById('pwInput');
 const pwError = document.getElementById('pwError');
@@ -76,8 +86,38 @@ brand.addEventListener('click', () => {
   clickTimer = setTimeout(() => { clickCount = 0; }, CLICK_WINDOW_MS);
   if (clickCount >= CLICKS_REQUIRED) {
     clickCount = 0;
-    openPwModal();
+    openLibrary();
   }
+});
+
+DOCS.forEach((doc, i) => {
+  const li = document.createElement('li');
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'lib-item';
+  btn.innerHTML =
+    '<span class="lib-no">' + doc.no + '</span>' +
+    '<span class="lib-text"><span class="lib-name"></span>' +
+    '<span class="lib-desc"></span></span>';
+  btn.querySelector('.lib-name').textContent = doc.name;
+  btn.querySelector('.lib-desc').textContent = doc.desc;
+  btn.addEventListener('click', () => selectDoc(i));
+  li.appendChild(btn);
+  libList.appendChild(li);
+});
+
+function openLibrary() {
+  libModal.hidden = false;
+  libList.querySelector('.lib-item')?.focus();
+}
+
+function closeLibrary() {
+  libModal.hidden = true;
+}
+
+libCancel.addEventListener('click', closeLibrary);
+libModal.addEventListener('click', (e) => {
+  if (e.target === libModal) closeLibrary();
 });
 
 function openPwModal() {
@@ -91,48 +131,95 @@ function closePwModal() {
   pwModal.hidden = true;
 }
 
-pwCancel.addEventListener('click', closePwModal);
+pwCancel.addEventListener('click', () => {
+  closePwModal();
+  openLibrary();
+});
 pwModal.addEventListener('click', (e) => {
-  if (e.target === pwModal) closePwModal();
+  if (e.target === pwModal) { closePwModal(); openLibrary(); }
 });
 
 const b64ToBytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 
+let payloadCache = null;
+let keyCache = null;
+let pendingIndex = 0;
+
 async function loadPayload() {
-  if (window.DECK_ENC) return window.DECK_ENC;
-  const res = await fetch('assets/data.bin');
-  if (!res.ok) throw new Error('payload fetch failed');
-  return res.json();
+  if (payloadCache) return payloadCache;
+  const src = window.DECK_ENC ? Promise.resolve(window.DECK_ENC) : fetch('assets/data.bin')
+    .then((res) => { if (!res.ok) throw new Error('payload fetch failed'); return res.json(); });
+  payloadCache = await src;
+  return payloadCache;
 }
 
-async function decryptDeck(password) {
-  const p = await loadPayload();
+// 자료 1개짜리 예전 형식과 여러 개를 담는 현재 형식을 함께 지원한다.
+function itemAt(payload, index) {
+  if (Array.isArray(payload.items)) return payload.items[index];
+  return index === 0 ? { iv: payload.iv, data: payload.data } : undefined;
+}
+
+async function deriveKey(payload, password) {
   const keyMaterial = await crypto.subtle.importKey(
     'raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']
   );
-  const key = await crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: b64ToBytes(p.salt), iterations: p.iter, hash: 'SHA-256' },
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: b64ToBytes(payload.salt), iterations: payload.iter, hash: 'SHA-256' },
     keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
   );
+}
+
+async function decryptDoc(payload, key, index) {
+  const item = itemAt(payload, index);
+  if (!item) throw new Error('item unavailable');
   const plain = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: b64ToBytes(p.iv) }, key, b64ToBytes(p.data)
+    { name: 'AES-GCM', iv: b64ToBytes(item.iv) }, key, b64ToBytes(item.data)
   );
   return new TextDecoder().decode(plain);
+}
+
+async function selectDoc(index) {
+  pendingIndex = index;
+  if (!keyCache) {
+    closeLibrary();
+    pwTitle.textContent = DOCS[index].name;
+    openPwModal();
+    return;
+  }
+  try {
+    const html = await decryptDoc(payloadCache, keyCache, index);
+    closeLibrary();
+    openDeck(html);
+  } catch {
+    alert('아직 준비되지 않은 자료입니다.');
+  }
 }
 
 pwForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const submitBtn = pwForm.querySelector('button[type=submit]');
   submitBtn.disabled = true;
+  let key;
   try {
-    const html = await decryptDeck(pwInput.value);
-    closePwModal();
-    openDeck(html);
+    const payload = await loadPayload();
+    key = await deriveKey(payload, pwInput.value);
+    // 비밀번호 검증은 항상 존재하는 첫 자료로 한다.
+    // 그래야 아직 배포되지 않은 자료를 골랐을 때 비밀번호 오류로 잘못 안내하지 않는다.
+    await decryptDoc(payload, key, 0);
   } catch {
     pwError.hidden = false;
     pwInput.select();
-  } finally {
     submitBtn.disabled = false;
+    return;
+  }
+  keyCache = key;
+  submitBtn.disabled = false;
+  closePwModal();
+  try {
+    openDeck(await decryptDoc(payloadCache, key, pendingIndex));
+  } catch {
+    alert('아직 준비되지 않은 자료입니다.');
+    openLibrary();
   }
 });
 
@@ -144,11 +231,13 @@ function openDeck(html) {
   deckFrame.addEventListener('load', () => deckFrame.contentWindow?.focus(), { once: true });
 }
 
+// 인증을 마친 뒤에는 목록으로 돌아가 다른 자료를 바로 열 수 있게 한다.
 function closeDeck() {
   deck.hidden = true;
   document.body.style.overflow = '';
   URL.revokeObjectURL(deckFrame.src);
   deckFrame.src = 'about:blank';
+  if (keyCache) openLibrary();
 }
 
 window.addEventListener('message', (e) => {
@@ -156,6 +245,8 @@ window.addEventListener('message', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (!pwModal.hidden && e.key === 'Escape') { closePwModal(); return; }
-  if (!deck.hidden && e.key === 'Escape') closeDeck();
+  if (e.key !== 'Escape') return;
+  if (!pwModal.hidden) { closePwModal(); openLibrary(); return; }
+  if (!deck.hidden) { closeDeck(); return; }
+  if (!libModal.hidden) closeLibrary();
 });
