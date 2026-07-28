@@ -58,18 +58,11 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
 const CLICKS_REQUIRED = 5;
 const CLICK_WINDOW_MS = 4000;
 
-// 목록 순서는 tools/encrypt_deck.py 에 넘기는 파일 순서와 일치해야 한다.
-const DOCS = [
-  { no: '01', name: '회사소개 자료', desc: 'COPIOS 투자법인 소개' },
-  { no: '02', name: '자녀투자계획안', desc: '20년 장기 자산 형성 전략' },
-];
-
 const brand = document.querySelector('.brand');
 const libModal = document.getElementById('libModal');
 const libList = document.getElementById('libList');
 const libCancel = document.getElementById('libCancel');
 const pwModal = document.getElementById('pwModal');
-const pwTitle = document.getElementById('pwTitle');
 const pwForm = document.getElementById('pwForm');
 const pwInput = document.getElementById('pwInput');
 const pwError = document.getElementById('pwError');
@@ -80,31 +73,37 @@ const deckFrame = document.getElementById('deckFrame');
 let clickCount = 0;
 let clickTimer = null;
 
+// 인증 전에는 자료가 몇 개인지도, 제목이 무엇인지도 알 수 없다.
+// 목록은 비밀번호로 복호화한 뒤에야 만들어진다.
 brand.addEventListener('click', () => {
   clickCount += 1;
   clearTimeout(clickTimer);
   clickTimer = setTimeout(() => { clickCount = 0; }, CLICK_WINDOW_MS);
   if (clickCount >= CLICKS_REQUIRED) {
     clickCount = 0;
-    openLibrary();
+    if (keyCache) openLibrary(); else openPwModal();
   }
 });
 
-DOCS.forEach((doc, i) => {
-  const li = document.createElement('li');
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'lib-item';
-  btn.innerHTML =
-    '<span class="lib-no">' + doc.no + '</span>' +
-    '<span class="lib-text"><span class="lib-name"></span>' +
-    '<span class="lib-desc"></span></span>';
-  btn.querySelector('.lib-name').textContent = doc.name;
-  btn.querySelector('.lib-desc').textContent = doc.desc;
-  btn.addEventListener('click', () => selectDoc(i));
-  li.appendChild(btn);
-  libList.appendChild(li);
-});
+function renderLibrary(docs) {
+  libList.textContent = '';
+  docs.forEach((doc, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'lib-item';
+    btn.innerHTML =
+      '<span class="lib-no"></span>' +
+      '<span class="lib-text"><span class="lib-name"></span>' +
+      '<span class="lib-desc"></span></span>';
+    btn.querySelector('.lib-no').textContent = doc.no;
+    btn.querySelector('.lib-name').textContent = doc.name;
+    btn.querySelector('.lib-desc').textContent = doc.desc;
+    btn.addEventListener('click', () => selectDoc(i));
+    li.appendChild(btn);
+    libList.appendChild(li);
+  });
+}
 
 function openLibrary() {
   libModal.hidden = false;
@@ -131,19 +130,15 @@ function closePwModal() {
   pwModal.hidden = true;
 }
 
-pwCancel.addEventListener('click', () => {
-  closePwModal();
-  openLibrary();
-});
+pwCancel.addEventListener('click', closePwModal);
 pwModal.addEventListener('click', (e) => {
-  if (e.target === pwModal) { closePwModal(); openLibrary(); }
+  if (e.target === pwModal) closePwModal();
 });
 
 const b64ToBytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 
 let payloadCache = null;
 let keyCache = null;
-let pendingIndex = 0;
 
 async function loadPayload() {
   if (payloadCache) return payloadCache;
@@ -159,6 +154,18 @@ function itemAt(payload, index) {
   return index === 0 ? { iv: payload.iv, data: payload.data } : undefined;
 }
 
+// 목록도 암호화되어 있다. 없는 경우(예전 형식)에는 제목 없이 번호만 보여준다.
+async function readIndex(payload, key) {
+  if (payload.index) {
+    const json = await decryptItem(payload.index, key);
+    return JSON.parse(json);
+  }
+  const count = Array.isArray(payload.items) ? payload.items.length : 1;
+  return Array.from({ length: count }, (_, i) => ({
+    no: String(i + 1).padStart(2, '0'), name: '자료 ' + (i + 1), desc: '',
+  }));
+}
+
 async function deriveKey(payload, password) {
   const keyMaterial = await crypto.subtle.importKey(
     'raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']
@@ -169,9 +176,7 @@ async function deriveKey(payload, password) {
   );
 }
 
-async function decryptDoc(payload, key, index) {
-  const item = itemAt(payload, index);
-  if (!item) throw new Error('item unavailable');
+async function decryptItem(item, key) {
   const plain = await crypto.subtle.decrypt(
     { name: 'AES-GCM', iv: b64ToBytes(item.iv) }, key, b64ToBytes(item.data)
   );
@@ -179,47 +184,30 @@ async function decryptDoc(payload, key, index) {
 }
 
 async function selectDoc(index) {
-  pendingIndex = index;
-  if (!keyCache) {
-    closeLibrary();
-    pwTitle.textContent = DOCS[index].name;
-    openPwModal();
-    return;
-  }
-  try {
-    const html = await decryptDoc(payloadCache, keyCache, index);
-    closeLibrary();
-    openDeck(html);
-  } catch {
-    alert('아직 준비되지 않은 자료입니다.');
-  }
+  const item = itemAt(payloadCache, index);
+  if (!item) return;
+  closeLibrary();
+  openDeck(await decryptItem(item, keyCache));
 }
 
 pwForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const submitBtn = pwForm.querySelector('button[type=submit]');
   submitBtn.disabled = true;
-  let key;
   try {
     const payload = await loadPayload();
-    key = await deriveKey(payload, pwInput.value);
-    // 비밀번호 검증은 항상 존재하는 첫 자료로 한다.
-    // 그래야 아직 배포되지 않은 자료를 골랐을 때 비밀번호 오류로 잘못 안내하지 않는다.
-    await decryptDoc(payload, key, 0);
+    const key = await deriveKey(payload, pwInput.value);
+    // 목록 복호화가 곧 비밀번호 검증이다. 실패하면 목록도 열리지 않는다.
+    const docs = await readIndex(payload, key);
+    keyCache = key;
+    renderLibrary(docs);
+    closePwModal();
+    openLibrary();
   } catch {
     pwError.hidden = false;
     pwInput.select();
+  } finally {
     submitBtn.disabled = false;
-    return;
-  }
-  keyCache = key;
-  submitBtn.disabled = false;
-  closePwModal();
-  try {
-    openDeck(await decryptDoc(payloadCache, key, pendingIndex));
-  } catch {
-    alert('아직 준비되지 않은 자료입니다.');
-    openLibrary();
   }
 });
 
@@ -246,7 +234,7 @@ window.addEventListener('message', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  if (!pwModal.hidden) { closePwModal(); openLibrary(); return; }
+  if (!pwModal.hidden) { closePwModal(); return; }
   if (!deck.hidden) { closeDeck(); return; }
   if (!libModal.hidden) closeLibrary();
 });
