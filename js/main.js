@@ -216,6 +216,8 @@ function closeDeck() {
 }
 
 window.addEventListener('message', (e) => {
+  // 자료 프레임이 보낸 신호만 받는다.
+  if (e.source !== deckFrame.contentWindow) return;
   if (e.data === 'copios:home') closeDeck();
 });
 
