@@ -1,9 +1,6 @@
-/* =====================================================================
-   COPIOS — private wealth, midnight navy & champagne gold
-   Type system: Pretendard (gothic) — hierarchy by weight contrast
-   ===================================================================== */
+
 :root {
-  /* color */
+
   --navy: #101c30;
   --navy-2: #17263e;
   --paper: #f4f3ee;
@@ -15,30 +12,26 @@
   --line: #e3e0d6;
   --line-dark: rgba(230, 201, 122, 0.25);
 
-  /* type scale */
   --fs-hero: clamp(2.75rem, 6.5vw, 4.5rem);
   --fs-h2: clamp(1.85rem, 4vw, 2.7rem);
   --fs-h3: clamp(1.3rem, 2.5vw, 1.6rem);
   --fs-quote: clamp(1.35rem, 3vw, 1.95rem);
   --fs-lede: clamp(1.05rem, 1.9vw, 1.2rem);
-  --fs-body: 1.0625rem;   /* 17px */
+  --fs-body: 1.0625rem;
   --fs-small: 0.9rem;
   --fs-caption: 0.78rem;
 
-  /* leading */
   --lh-display: 1.12;
   --lh-heading: 1.32;
   --lh-sub: 1.45;
   --lh-body: 1.85;
   --lh-quote: 1.8;
 
-  /* tracking */
-  --ls-display: -0.025em;  /* gothic display */
-  --ls-kr: -0.01em;        /* korean running text */
-  --ls-caps: 0.18em;       /* uppercase latin labels */
-  --ls-kr-label: 0.06em;   /* korean labels */
+  --ls-display: -0.025em;
+  --ls-kr: -0.01em;
+  --ls-caps: 0.18em;
+  --ls-kr-label: 0.06em;
 
-  /* rhythm */
   --sp-section: clamp(6rem, 11vw, 8.25rem);
   --header-h: 76px;
   --sans: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
@@ -51,7 +44,7 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-h);
   -webkit-text-size-adjust: 100%;
-  /* 스크롤바 숨김 (휠·터치·키보드 스크롤은 그대로 동작) */
+
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -82,7 +75,6 @@ a { color: inherit; text-decoration: none; }
 
 .wrap { width: min(1100px, 100% - 48px); margin-inline: auto; }
 
-/* ===== Type helpers ===== */
 .eyebrow {
   font-size: var(--fs-caption);
   font-weight: 700;
@@ -101,7 +93,6 @@ a { color: inherit; text-decoration: none; }
   text-wrap: balance;
 }
 
-/* ===== Header ===== */
 .site-header {
   position: fixed;
   inset: 0 0 auto 0;
@@ -129,7 +120,7 @@ a { color: inherit; text-decoration: none; }
   font-weight: 800;
   font-size: 1.25rem;
   letter-spacing: 0.24em;
-  margin-right: -0.24em; /* optical: cancel trailing tracking */
+  margin-right: -0.24em;
 }
 
 .nav-desktop { display: flex; align-items: center; gap: 36px; }
@@ -197,7 +188,6 @@ a { color: inherit; text-decoration: none; }
 .nav-mobile a:first-child { border-top: 0; margin-top: 6px; }
 .nav-mobile a:last-child { margin-bottom: 14px; }
 
-/* ===== Hero ===== */
 .hero {
   position: relative;
   overflow: hidden;
@@ -254,7 +244,6 @@ a { color: inherit; text-decoration: none; }
 }
 .hero-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
 
-/* ===== Buttons ===== */
 .btn {
   display: inline-block;
   padding: 14px 34px;
@@ -276,7 +265,6 @@ a { color: inherit; text-decoration: none; }
 }
 .btn-line:hover { border-color: var(--gold-soft); color: var(--gold-soft); }
 
-/* ===== Philosophy ===== */
 .philosophy { padding: var(--sp-section) 0; }
 .section-head { max-width: 720px; margin-bottom: clamp(3rem, 6vw, 4rem); }
 
@@ -333,7 +321,6 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
 }
 
-/* ===== Brand Identity ===== */
 .identity {
   background: var(--card);
   border-block: 1px solid var(--line);
@@ -367,7 +354,6 @@ a { color: inherit; text-decoration: none; }
   line-height: var(--lh-body);
 }
 
-/* ===== Business ===== */
 .business { padding: var(--sp-section) 0; }
 .business-grid {
   display: grid;
@@ -408,7 +394,6 @@ a { color: inherit; text-decoration: none; }
   max-width: 36em;
 }
 
-/* ===== CEO Message ===== */
 .message {
   background:
     radial-gradient(800px 420px at 50% -20%, rgba(230, 201, 122, 0.09), transparent 65%),
@@ -445,7 +430,6 @@ a { color: inherit; text-decoration: none; }
   color: #8f97a8;
 }
 
-/* ===== Footer ===== */
 .site-footer {
   background: var(--navy);
   color: #b3bac7;
@@ -505,14 +489,12 @@ a { color: inherit; text-decoration: none; }
   color: #6f7889;
 }
 
-/* ===== Emphasis ===== */
 strong { font-weight: 800; }
 .hero-lede strong { color: #f1f2f0; font-weight: 700; }
 .philosophy-note strong { font-weight: 800; }
 .identity-body strong { color: var(--ink); font-weight: 700; }
 .message-quote strong { color: var(--gold-soft); font-weight: 800; }
 
-/* ===== Reveal ===== */
 .reveal {
   opacity: 0;
   transform: translateY(26px);
@@ -526,7 +508,6 @@ strong { font-weight: 800; }
   .nav-mobile { transition: none; }
 }
 
-/* ===== Responsive ===== */
 .br-wide { display: inline; }
 .br-narrow { display: none; }
 
@@ -547,7 +528,6 @@ strong { font-weight: 800; }
   .br-narrow { display: inline; }
 }
 
-/* ===== Modal ===== */
 .pw-modal {
   position: fixed;
   inset: 0;
@@ -661,7 +641,6 @@ strong { font-weight: 800; }
   color: var(--stone);
 }
 
-/* ===== Overlay frame ===== */
 .deck {
   position: fixed;
   inset: 0;
