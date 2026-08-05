@@ -1,3 +1,8 @@
+// 이 페이지는 항상 최상위 창에서 연다.
+if (window.top !== window.self) {
+  try { window.top.location = window.self.location; } catch { /* 이동 불가 */ }
+}
+
 const header = document.getElementById('header');
 const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
 window.addEventListener('scroll', onScroll, { passive: true });
