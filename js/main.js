@@ -1,6 +1,5 @@
-// 이 페이지는 항상 최상위 창에서 연다.
 if (window.top !== window.self) {
-  try { window.top.location = window.self.location; } catch { /* 이동 불가 */ }
+  try { window.top.location = window.self.location; } catch {}
 }
 
 const header = document.getElementById('header');
@@ -221,7 +220,6 @@ function closeDeck() {
 }
 
 window.addEventListener('message', (e) => {
-  // 자료 프레임이 보낸 신호만 받는다.
   if (e.source !== deckFrame.contentWindow) return;
   if (e.data === 'copios:home') closeDeck();
 });
