@@ -210,7 +210,7 @@ a { color: inherit; text-decoration: none; }
   background: url("../assets/logo.png") center / contain no-repeat;
   filter: invert(1);
   mix-blend-mode: screen;
-  opacity: 0.05;
+  opacity: 0.04;
   pointer-events: none;
 }
 .hero-inner { position: relative; z-index: 1; }
