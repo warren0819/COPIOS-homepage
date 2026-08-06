@@ -343,7 +343,7 @@ a { color: inherit; text-decoration: none; }
   background: #fff;
   box-shadow: 0 24px 60px -30px rgba(16, 28, 48, 0.35);
 }
-.emblem-ring img { width: min(320px, 60vw); border-radius: 50%; }
+.emblem-ring img { width: min(320px, 60vw); height: auto; border-radius: 50%; }
 
 .identity-copy .title-display { margin-bottom: 32px; }
 .identity-body {
