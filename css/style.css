@@ -207,7 +207,8 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-50%);
   width: 78vmin;
   height: 78vmin;
-  background: url("../assets/logo.png") center / contain no-repeat;
+  background: image-set(url("../assets/hero-bg.webp") type("image/webp"),
+    url("../assets/logo.png")) center / contain no-repeat;
   filter: invert(1);
   mix-blend-mode: screen;
   opacity: 0.05;
