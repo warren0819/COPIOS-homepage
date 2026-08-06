@@ -527,10 +527,9 @@ strong { font-weight: 800; }
   .br-wide { display: none; }
   .br-narrow { display: inline; }
   .hero::before {
-    right: -18%;
-    width: auto;
-    height: 132%;
-    aspect-ratio: 1;
+    right: -62vw;
+    width: 112vw;
+    height: 112vw;
   }
 }
 
