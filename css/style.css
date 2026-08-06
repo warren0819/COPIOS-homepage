@@ -526,6 +526,12 @@ strong { font-weight: 800; }
   .brand-name { font-size: 1.2rem; }
   .br-wide { display: none; }
   .br-narrow { display: inline; }
+  .hero::before {
+    right: -18%;
+    width: auto;
+    height: 132%;
+    aspect-ratio: 1;
+  }
 }
 
 .pw-modal {
