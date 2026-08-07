@@ -187,8 +187,16 @@ pwForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const submitBtn = pwForm.querySelector('button[type=submit]');
   submitBtn.disabled = true;
+  let payload;
   try {
-    const payload = await loadPayload();
+    payload = await loadPayload();
+  } catch {
+    pwError.textContent = '지금은 열 수 없습니다. 잠시 후 다시 시도해 주세요.';
+    pwError.hidden = false;
+    submitBtn.disabled = false;
+    return;
+  }
+  try {
     const key = await deriveKey(payload, pwInput.value);
     const docs = await readIndex(payload, key);
     keyCache = key;
@@ -196,6 +204,7 @@ pwForm.addEventListener('submit', async (e) => {
     closePwModal();
     openLibrary();
   } catch {
+    pwError.textContent = '비밀번호가 일치하지 않습니다.';
     pwError.hidden = false;
     pwInput.select();
   } finally {
